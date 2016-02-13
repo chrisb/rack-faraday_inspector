@@ -6,7 +6,7 @@ module Rack
       end
 
       def template_path(*paths)
-        ::File.expand_path(::File.join(::File.dirname(__FILE__), '..', '..', *paths))
+        ::File.expand_path(::File.join(::File.dirname(__FILE__), '..', '..', '..', 'assets', *paths))
       end
 
       def css_template_path
