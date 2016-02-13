@@ -1,0 +1,72 @@
+.faraday_inspector {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background-color: #f2f2f2;
+  font-size: 12px;
+  font-family: 'Helvetica Neue', sans-serif;
+
+  &.minimized {
+    border: 1px solid #eee;
+    border-top-right-radius: 8px;
+    padding: 8px;
+    table { display: none; }
+    .request { display: none; }
+    .close { display: none; }
+  }
+
+  &.open {
+    width: 100%;
+    border-top: 1px solid #eee;
+    .prompt { display: none; }
+    .close {
+      display: inline-block;
+      position: absolute;
+      top: 0;
+      right: 0;
+      padding: 6px;
+      font-size: 14px;
+    }
+  }
+
+  .event {
+    .method { font-weight: bold; }
+    .host, .duration, .status { color: #aaa; }
+    .host, .duration, .status, .method { width: 60px; }
+    .host, .duration, .status { text-align: right;  }
+    .method { text-align: center; }
+  }
+
+  .request {
+    max-height: 400px;
+    text-overflow: scroll;
+    overflow: scroll;
+    font-family: 'Source Code Pro Light', 'Menlo', monospace;
+    margin: 10px;
+    background-color: #fff;
+    // border: 1px solid #aaa;
+    padding: 8px;
+  }
+
+  .prompt, .close {
+    cursor: pointer;
+    cursor: hand;
+    font-weight: bold;
+  }
+
+  table {
+    width: 100%;
+    font-family: 'Source Code Pro Light', 'Menlo', monospace;
+    .request {
+      display: none;
+    }
+    .request.open {
+      display: block;
+    }
+    tr.event:hover {
+      cursor: hand;
+      cursor: pointer;
+      background-color: #ffe;
+    }
+  }
+}

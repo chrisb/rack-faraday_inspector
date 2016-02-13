@@ -1,0 +1,60 @@
+<style type='text/css'>
+<!--
+  <%= @css %>
+-->
+</style>
+<h1>I'm here!</h1>
+<div class='faraday_inspector minimized'>
+  <div class='prompt'>
+    <%= Thread.current[:faraday_requests].count %> Faraday Request<%= 's' unless Thread.current[:faraday_requests].to_a.count == 1 %>
+  </div>
+  <div class='close'>&times;</div>
+  <table class='faraday_inspector-requests'>
+    <% Thread.current[:faraday_requests].to_a.each do |event| %>
+      <% req = event[:env] %>
+      <tr class='event'>
+        <td class='method'><%= req.method.upcase %></td>
+        <td class='host'><%= req.url.host %></td>
+        <td class='path'><%= req.url.path %></td>
+        <td class='duration'><%= event[:duration].round(2) %>s</td>
+        <td class='status'><%= req.status %></td>
+      </tr>
+      <tr>
+        <td colspan='5'>
+          <div class='request'>
+            <% if req[:body].present? %>
+              <% body = req[:body] %>
+              <% body = JSON.pretty_generate(JSON.parse(req[:body])) if req[:response_headers]['content-type'].to_s.include?('json') %>
+              <%= CGI.escapeHTML(body).gsub("\n", "<br />") %>
+            <% else %>
+              (No body for this request.)
+            <% end %>
+          </div>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+</div>
+<script type="text/javascript">
+//<![CDATA[
+  var closeAllRequests = function() {
+    $('.faraday_inspector table .request').removeClass('open');
+  }
+
+  var showFaradayRequest = function(e) {
+    var $el = $(this).next().find('.request');
+    var isOpen = $el.hasClass('open');
+    closeAllRequests();
+    if(!isOpen) { $el.addClass('open'); }
+  }
+
+  var toggleFardayInspector = function(e) {
+    closeAllRequests();
+    $('.faraday_inspector').toggleClass('minimized');
+    $('.faraday_inspector').toggleClass('open');
+  };
+
+  $('.faraday_inspector tr.event').click(showFaradayRequest);
+  $('.faraday_inspector .prompt, .faraday_inspector .close').click(toggleFardayInspector);
+//]]>
+</script>
