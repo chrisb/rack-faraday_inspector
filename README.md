@@ -1,15 +1,15 @@
 # Rack::FaradayInspector
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/rack/faraday_inspector`. To experiment with that code, run `bin/console` for an interactive prompt.
+Rack::FaradayInspector renders a bit of HTML at the bottom of your pages that allows you to inspect all of the requests Faraday made for the current request.
 
-TODO: Delete this and the text above, and describe your gem
+Currently only supports Rails. Requires SASS and jQuery.
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'rack-faraday_inspector'
+gem 'rack-faraday_inspector', group: :development
 ```
 
 And then execute:
@@ -22,15 +22,17 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+To view requests, simply add the middleware to each of the Faraday connections you want to inspect:
 
-## Development
+```ruby
+require 'rack/faraday_inspector'
 
-After checking out the repo, run `bin/setup` to install dependencies. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+Faraday.new url: 'http://www.sushi.com' do |faraday|
+  faraday.use :inspector
+  # ...
+end
+```
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/rack-faraday_inspector.
-
+Bug reports and pull requests are welcome on GitHub at https://github.com/chrisb/rack-faraday_inspector.
