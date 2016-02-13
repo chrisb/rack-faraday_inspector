@@ -11,16 +11,10 @@ Currently only supports Rails. Requires SASS and jQuery.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'rack-faraday_inspector', group: :development
+gem 'rack-faraday_inspector', github: 'chrisb/rack-faraday_inspector'
 ```
 
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install rack-faraday_inspector
+I'm still actively working on this Gem, so it has not been pushed to Rubygems yet.
 
 ## Usage
 
@@ -34,6 +28,8 @@ Faraday.new url: 'http://www.sushi.com' do |faraday|
   # ...
 end
 ```
+
+Note: only in the `development` environment will requests be instrumented and the inspector rendered.
 
 ## Contributing
 
