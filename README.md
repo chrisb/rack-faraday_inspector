@@ -2,6 +2,8 @@
 
 Rack::FaradayInspector renders a bit of HTML at the bottom of your pages that allows you to inspect all of the requests Faraday made for the current request.
 
+![rack-faraday_inspector](https://cloud.githubusercontent.com/assets/29424/13030496/029e5f7a-d262-11e5-886c-1b8e3b8a6260.gif)
+
 Currently only supports Rails. Requires SASS and jQuery.
 
 ## Installation
