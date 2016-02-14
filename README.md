@@ -20,14 +20,23 @@ I'm still actively working on this Gem, so pull from GitHub.
 
 ## Usage
 
-To view requests, simply add the middleware to each of the Faraday connections you want to inspect:
+In order to instrument and show Faraday requests, you'll need to add the middleware to your connection:
 
 ```ruby
-require 'rack/faraday_inspector'
-
 Faraday.new url: 'http://www.sushi.com' do |faraday|
   faraday.use :inspector
   # ...
+end
+```
+
+By default the inspector web UI is disabled. To enable the inspector, add the following to an initializer, or better yet, to the specific Rails environment configurations that you want to enable the inspector for:
+
+i.e. in `config/environments/development.rb`:
+
+```ruby
+Rails.application.configure do
+  # ...
+  Rack::FaradayInspector.enabled = true
 end
 ```
 
