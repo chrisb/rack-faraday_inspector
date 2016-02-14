@@ -19,7 +19,7 @@
     <% Thread.current[:faraday_requests].to_a.each do |event| %>
       <% req = event[:env] %>
       <% request_id = event.hash %>
-      <% is_json = req[:body].present? && req[:response_header].try(:[], 'content-type').to_s.include?('json') || req.url.host.include?('json') %>
+      <% is_json = req[:body].present? && req[:response_header].try(:[], 'content-type').to_s.include?('json') %>
       <tr class='event'>
         <td class='method'><%= req.method.upcase %></td>
         <td class='host'><%= req.url.host %></td>
