@@ -40,7 +40,11 @@ Rails.application.configure do
 end
 ```
 
-Note: only in the `development` environment will requests be instrumented and the inspector rendered.
+Or in something like `config/initializers/faraday_inspector.rb`:
+
+```ruby
+Rack::FaradayInspector.enabled = Rails.env.development?
+```
 
 ## Contributing
 
