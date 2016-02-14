@@ -1,6 +1,8 @@
 # Rack::FaradayInspector
 
-Rack::FaradayInspector renders a bit of HTML at the bottom of your pages that allows you to inspect all of the requests Faraday made for the current request.
+Rack::FaradayInspector renders a bit of HTML at the bottom of your pages that allows you to inspect all of the HTTP requests Faraday made during the current Rails action.
+
+It's like your browser's developer tools network view, but for your backend API requests.
 
 ![rack-faraday_inspector](https://cloud.githubusercontent.com/assets/29424/13030496/029e5f7a-d262-11e5-886c-1b8e3b8a6260.gif)
 
@@ -14,7 +16,7 @@ Add this line to your application's Gemfile:
 gem 'rack-faraday_inspector', github: 'chrisb/rack-faraday_inspector'
 ```
 
-I'm still actively working on this Gem, so it has not been pushed to Rubygems yet.
+I'm still actively working on this Gem, so pull from GitHub.
 
 ## Usage
 
