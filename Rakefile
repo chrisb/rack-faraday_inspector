@@ -19,7 +19,7 @@ task update_asset_version: :compile_sass do
   File.open('lib/rack/faraday_inspector/asset_version.rb','w') do |f|
     f.write \
 "module Rack
-  class FaradayInspector
+  module FaradayInspector
     ASSET_VERSION = '#{Digest::MD5.hexdigest(h.sort.join(''))}'.freeze
   end
 end"

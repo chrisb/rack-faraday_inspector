@@ -1,5 +1,6 @@
 require 'faraday/inspector'
 require 'rack/faraday_inspector/version'
+require 'rack/faraday_inspector/asset_version'
 require 'rack/faraday_inspector/middleware'
 require 'active_support/configurable'
 

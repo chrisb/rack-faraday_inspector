@@ -10,7 +10,7 @@
 //]]>
 </script>
 
-<div class='faraday_inspector minimized'>
+<div class='faraday_inspector minimized' data-version="<%= Rack::FaradayInspector::VERSION %>" data-asset-version="<%= Rack::FaradayInspector::ASSET_VERSION %>">
   <div class='prompt'>
     <%= Thread.current[:faraday_requests].count %> Faraday Request<%= 's' unless Thread.current[:faraday_requests].to_a.count == 1 %>
   </div>
@@ -19,7 +19,7 @@
     <% Thread.current[:faraday_requests].to_a.each do |event| %>
       <% req = event[:env] %>
       <% request_id = event.hash %>
-      <% is_json = req[:body].present? && req[:response_header].try(:[], 'content-type').to_s.include?('json') %>
+      <% is_json = req[:body].present? && req[:response_headers].try(:[], 'content-type').to_s.include?('json') %>
       <tr class='event'>
         <td class='method'><%= req.method.upcase %></td>
         <td class='host'><%= req.url.host %></td>
