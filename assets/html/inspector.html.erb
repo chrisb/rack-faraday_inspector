@@ -30,21 +30,22 @@
       <tr>
         <td colspan='5'>
           <div class='request <%= 'json' if is_json %>' id='request-<%= request_id %>'>
-            <% if req[:body].present? %>
-              <% if is_json %>
-                <pre></pre>
-                <script type="text/javascript">
-                //<![CDATA[
-                  var responseObject = <%= req[:body] %>;
-                  $('#request-<%= request_id %> pre').html(library.json.prettyPrint(responseObject));
-                //]]>
-                </script>
+            <pre class='body'>
+              <% if req[:body].present? %>
+                <% if is_json %>
+                  <script type="text/javascript">
+                  //<![CDATA[
+                    var responseObject = <%= req[:body] %>;
+                    $('#request-<%= request_id %> pre').html(library.json.prettyPrint(responseObject));
+                  //]]>
+                  </script>
+                <% else %>
+                  <%= CGI.escapeHTML(req[:body]).gsub("\n", "<br />") %>
+                <% end %>
               <% else %>
-                <%= CGI.escapeHTML(req[:body]).gsub("\n", "<br />") %>
+                (No body for this request.)
               <% end %>
-            <% else %>
-              (No body for this request.)
-            <% end %>
+            </pre>
           </div>
         </td>
       </tr>
