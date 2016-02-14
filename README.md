@@ -6,7 +6,7 @@ It's like your browser's developer tools network view, but for your backend API 
 
 ![rack-faraday_inspector](https://cloud.githubusercontent.com/assets/29424/13030496/029e5f7a-d262-11e5-886c-1b8e3b8a6260.gif)
 
-Currently only supports Rails. Requires SASS and jQuery.
+Currently only supports Rails and requires jQuery.
 
 ## Installation
 
