@@ -5,33 +5,46 @@ module Rack
         @app = app
       end
 
-      def template_path(*paths)
+      def config
+        Rack::FaradayInspector.config
+      end
+
+      def asset_path(*paths)
         ::File.expand_path(::File.join(::File.dirname(__FILE__), '..', '..', '..', 'assets', *paths))
       end
 
-      def css_template_path
-        template_path('sass', 'styles.scss')
+      def compile_css
+        path_to_sass = asset_path('sass', 'style.scss')
+        @css = Sass::Engine.new(::File.open(path_to_sass).read,
+                                cache: true,
+                                syntax: :scss,
+                                style: :compressed,
+                                filename: path_to_sass).render
       end
 
-      def css_template
-        ::File.open(css_template_path).read
+      def should_compile_css_at_runtime?
+        config.development_mode && defined?(Sass)
       end
 
-      def render_css
-        @css = Sass::Engine.new(css_template,{
-          cache: true,
-          syntax: :scss,
-          style: :compressed,
-          filename: css_template_path,
-        }).render
+      def read_compiled_css
+        ::File.open(asset_path('css', 'style.css')).read
+      end
+
+      def set_javascript
+        @javascript = ::File.open(asset_path('javascripts', 'inspector.js')).read
+      end
+
+      def set_css
+        @css = should_compile_css_at_runtime? ? compile_css : read_compiled_css
       end
 
       def template
-        ::File.open(template_path('html', 'inspector.html.erb')).read
+        ::File.open(asset_path('html', 'inspector.html.erb')).read
       end
 
       def content
-        render_css
+        set_css
+        set_javascript
         ERB.new(template).result(binding)
       end
 
@@ -39,26 +52,31 @@ module Rack
         Thread.current[:faraday_requests] = nil
       end
 
+      def inject_inspector_into(response)
+        new_response = []
+        response.each do |body|
+          partition = body.rpartition('</body>')
+          partition[0] += content.to_s
+          new_response << partition.join
+        end
+        new_response
+      end
+
+      def should_inject_inspector?(headers)
+        config.enabled && headers['Content-Type'].to_s.include?('text/html')
+      end
+
       def call(env)
         status, headers, response = @app.call(env)
 
-        if headers['Content-Type'].to_s.include? 'text/html'
-          new_response = []
-          response.each do |body|
-            partition = body.rpartition('</body>')
-            partition[0] += content.to_s
-            new_response << partition.join
-          end
-
-          # Update the content-length
-          headers['Content-Length'] = new_response.inject(0) do |len, body|
-            len += body.bytesize
+        if should_inject_inspector?(headers)
+          response = inject_inspector_into(response)
+          headers['Content-Length'] = response.inject(0) do |len, body|
+            len + body.bytesize
           end.to_s
-
-          [status, headers, new_response]
-        else
-          [status, headers, response]
         end
+
+        [status, headers, response]
       ensure
         clear_requests
       end

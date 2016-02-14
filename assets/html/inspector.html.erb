@@ -3,7 +3,13 @@
   <%= @css %>
 -->
 </style>
-<h1>I'm here!</h1>
+
+<script type="text/javascript">
+//<![CDATA[
+  <%= @javascript %>
+//]]>
+</script>
+
 <div class='faraday_inspector minimized'>
   <div class='prompt'>
     <%= Thread.current[:faraday_requests].count %> Faraday Request<%= 's' unless Thread.current[:faraday_requests].to_a.count == 1 %>
@@ -12,20 +18,30 @@
   <table class='faraday_inspector-requests'>
     <% Thread.current[:faraday_requests].to_a.each do |event| %>
       <% req = event[:env] %>
+      <% request_id = event.hash %>
+      <% is_json = req[:body].present? && req[:response_header].try(:[], 'content-type').to_s.include?('json') || req.url.host.include?('json') %>
       <tr class='event'>
         <td class='method'><%= req.method.upcase %></td>
         <td class='host'><%= req.url.host %></td>
         <td class='path'><%= req.url.path %></td>
-        <td class='duration'><%= event[:duration].round(2) %>s</td>
+        <td class='duration'><%= event[:duration].round(3) %>s</td>
         <td class='status'><%= req.status %></td>
       </tr>
       <tr>
         <td colspan='5'>
-          <div class='request'>
+          <div class='request <%= 'json' if is_json %>' id='request-<%= request_id %>'>
             <% if req[:body].present? %>
-              <% body = req[:body] %>
-              <% body = JSON.pretty_generate(JSON.parse(req[:body])) if req[:response_headers]['content-type'].to_s.include?('json') %>
-              <%= CGI.escapeHTML(body).gsub("\n", "<br />") %>
+              <% if is_json %>
+                <pre></pre>
+                <script type="text/javascript">
+                //<![CDATA[
+                  var responseObject = <%= req[:body] %>;
+                  $('#request-<%= request_id %> pre').html(library.json.prettyPrint(responseObject));
+                //]]>
+                </script>
+              <% else %>
+                <%= CGI.escapeHTML(req[:body]).gsub("\n", "<br />") %>
+              <% end %>
             <% else %>
               (No body for this request.)
             <% end %>
@@ -35,26 +51,3 @@
     <% end %>
   </table>
 </div>
-<script type="text/javascript">
-//<![CDATA[
-  var closeAllRequests = function() {
-    $('.faraday_inspector table .request').removeClass('open');
-  }
-
-  var showFaradayRequest = function(e) {
-    var $el = $(this).next().find('.request');
-    var isOpen = $el.hasClass('open');
-    closeAllRequests();
-    if(!isOpen) { $el.addClass('open'); }
-  }
-
-  var toggleFardayInspector = function(e) {
-    closeAllRequests();
-    $('.faraday_inspector').toggleClass('minimized');
-    $('.faraday_inspector').toggleClass('open');
-  };
-
-  $('.faraday_inspector tr.event').click(showFaradayRequest);
-  $('.faraday_inspector .prompt, .faraday_inspector .close').click(toggleFardayInspector);
-//]]>
-</script>
