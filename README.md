@@ -1,5 +1,7 @@
 # Rack::FaradayInspector
 
+[![Code Climate](https://codeclimate.com/github/chrisb/rack-faraday_inspector/badges/gpa.svg)](https://codeclimate.com/github/chrisb/rack-faraday_inspector)
+
 Rack::FaradayInspector renders a bit of HTML at the bottom of your pages that allows you to inspect all of the HTTP requests Faraday made during the current Rails action.
 
 It's like your browser's developer tools network view, but for your backend API requests.
